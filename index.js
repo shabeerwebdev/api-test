@@ -8,6 +8,7 @@ const sloFn = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve("your api is success in 5s");
+      isApiBusy = false;
     }, 20000);
   });
 };
@@ -18,7 +19,6 @@ app.get("/my-api", async (req, res) => {
     try {
       const ok = await sloFn();
       res.send(ok);
-      isApiBusy = false;
     } catch (err) {
       console.log(err, "err is here");
       res.status(500).send("Internal Server Error");
