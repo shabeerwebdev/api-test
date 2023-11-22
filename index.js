@@ -5,23 +5,21 @@ const port = process.env.PORT || 3000;
 let isApiBusy = false;
 
 const sloFn = () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve("your api is success in 5s");
-      isApiBusy = false;
-    }, 20000);
-  });
+  return setTimeout(() => {
+    resolve("your api is success in 5s");
+    isApiBusy = false;
+  }, 20000);
 };
 
-app.get("/my-api", async (req, res) => {
+app.get("/my-api", (req, res) => {
   const clientIP =
     req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
-    console.log(clientIP, isApiBusy, "clientIP is here");
+  console.log("clientIP is here", clientIP, isApiBusy, "clientIP is here");
   if (!isApiBusy) {
     isApiBusy = true;
     try {
-      const ok = await sloFn();
+      const ok = sloFn();
       res.send(ok);
     } catch (err) {
       console.log(err, "err is here");
