@@ -56,7 +56,7 @@ app.get("/my-api", apiGuard, async (req, res) => {
     // Your API logic goes here
 
     // Simulating some async operation
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 10000));
 
     // Send a response
     res.send("Your API response");
