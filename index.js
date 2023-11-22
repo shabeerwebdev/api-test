@@ -14,16 +14,20 @@ const sloFn = () => {
 };
 
 app.get("/my-api", async (req, res) => {
+  const clientIP =
+    req.headers["x-forwarded-for"] || req.connection.remoteAddress;
   if (!isApiBusy) {
     isApiBusy = true;
     try {
       const ok = await sloFn();
+      console.log(clientIP, isApiBusy, "clientIP is here");
       res.send(ok);
     } catch (err) {
       console.log(err, "err is here");
       res.status(500).send("Internal Server Error");
     }
   } else {
+    console.log("api is busy, try later");
     res.send("api is busy, try later");
   }
 });
