@@ -16,11 +16,12 @@ const sloFn = () => {
 app.get("/my-api", async (req, res) => {
   const clientIP =
     req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
+    console.log(clientIP, isApiBusy, "clientIP is here");
   if (!isApiBusy) {
     isApiBusy = true;
     try {
       const ok = await sloFn();
-      console.log(clientIP, isApiBusy, "clientIP is here");
       res.send(ok);
     } catch (err) {
       console.log(err, "err is here");
