@@ -4,15 +4,25 @@ const port = process.env.PORT || 3000;
 
 let isApiBusy = false;
 
-app.get("/my-api", (req, res) => {
+const sloFn = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("your api is success in 5s");
+    }, 20000);
+  });
+};
+
+app.get("/my-api", async (req, res) => {
   if (!isApiBusy) {
     isApiBusy = true;
     try {
-      setTimeout(() => {
-        res.send("your api is success");
-      }, "50000");
+      const ok = await sloFn();
+      res.send(ok);
       isApiBusy = false;
-    } catch (err) {}
+    } catch (err) {
+      console.log(err, "err is here");
+      res.status(500).send("Internal Server Error");
+    }
   } else {
     res.send("api is busy, try later");
   }
