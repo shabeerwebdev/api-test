@@ -10,6 +10,7 @@ app.get("/endpointAB", async (req, res) => {
   }
 
   isApiBusy = true;
+  console.log(isApiBusy, "isApiBusy down");
 
   try {
     await new Promise((resolve) => setTimeout(resolve, 3000));
