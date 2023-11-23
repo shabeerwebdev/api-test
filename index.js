@@ -13,7 +13,7 @@ app.get("/endpointAB", async (req, res) => {
 
   try {
     // Simulate a time-consuming process (5 minutes in this case)
-    await new Promise((resolve) => setTimeout(resolve, 5 * 60 * 1000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     // Your actual processing logic goes here
 
