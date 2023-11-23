@@ -1,71 +1,35 @@
-// const express = require("express");
-// const app = express();
-// const port = process.env.PORT || 3000;
-
-// let isApiBusy = false;
-
-// const sloFn = () => {
-//   return setTimeout(() => {
-//     isApiBusy = false;
-//   }, 20000);
-// };
-
-// app.get("/my-api", (req, res) => {
-//   const clientIP =
-//     req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-
-//   console.log("clientIP is here", clientIP, isApiBusy, "clientIP is here");
-//   if (!isApiBusy) {
-//     isApiBusy = true;
-//     try {
-//       const ok = sloFn();
-//       res.send(ok);
-//     } catch (err) {
-//       console.log(err, "err is here");
-//       res.status(500).send("Internal Server Error");
-//     }
-//   } else {
-//     console.log("api is busy, try later");
-//     res.send("api is busy, try later");
-//   }
-// });
-
-// app.listen(port, () => {
-//   console.log(`Server is running on port ${port}`);
-// });
-
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 3000;
 
 let isApiBusy = false;
 
-// Middleware to check if the API is busy
-const apiGuard = (req, res, next) => {
-  if (!isApiBusy) {
-    isApiBusy = true;
-    next();
-  } else {
-    res.status(503).send("API is busy, please try again later.");
+app.get("/endpointAB", async (req, res) => {
+  if (isApiBusy) {
+    return res.status(503).json({ message: "API busy, try again later." });
   }
-};
 
-// Your endpoint
-app.get("/my-api", apiGuard, async (req, res) => {
+  // Set the flag to indicate that the API is busy
+  isApiBusy = true;
+
   try {
-    // Your API logic goes here
+    // Simulate a time-consuming process (5 minutes in this case)
+    await new Promise((resolve) => setTimeout(resolve, 5 * 60 * 1000));
 
-    // Simulating some async operation
-    await new Promise((resolve) => setTimeout(resolve, 10000));
+    // Your actual processing logic goes here
 
-    // Send a response
-    res.send("Your API response");
+    // Send the response when processing is complete
+    res.json({ message: "Processing complete" });
+  } catch (error) {
+    // Handle errors here
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   } finally {
-    // Release the API lock
+    // Reset the flag to indicate that the API is no longer busy
     isApiBusy = false;
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
